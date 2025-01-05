@@ -1,0 +1,7 @@
+@article{REPO335,
+    author = "Valmeekam, Karthik and Marquez, Matthew and Olmo, Alberto and Sreedharan, Sarath and Kambhampati, Subbarao",
+    journal = "Advances in Neural Information Processing Systems",
+    title = "{Planbench: An extensible benchmark for evaluating large language models on planning and reasoning about change}",
+    volume = "36",
+    year = "2024"
+}
