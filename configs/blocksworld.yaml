@@ -1,0 +1,228 @@
+instance_dir: blocksworld/generated_basic
+generalized_instance_dir: blocksworld/generated
+domain_file: blocksworld/generated_domain.pddl
+domain_name: blocksworld
+n_instances: 501
+start: 1
+end: 500
+instances_template: instance-{}.pddl
+domain_intro: |
+   I am playing with a set of blocks where I need to arrange the blocks into stacks. Here are the actions I can do
+
+   Pick up a block
+   Unstack a block from on top of another block
+   Put down a block
+   Stack a block on top of another block
+
+   I have the following restrictions on my actions:
+   I can only pick up or unstack one block at a time.
+   I can only pick up or unstack a block if my hand is empty.
+   I can only pick up a block if the block is on the table and the block is clear. A block is clear if the block has no other blocks on top of it and if the block is not picked up.
+   I can only unstack a block from on top of another block if the block I am unstacking was really on top of the other block.
+   I can only unstack a block from on top of another block if the block I am unstacking is clear.
+   Once I pick up or unstack a block, I am holding the block.
+   I can only put down a block that I am holding.
+   I can only stack a block on top of another block if I am holding the block being stacked.
+   I can only stack a block on top of another block if the block onto which I am stacking the block is clear.
+   Once I put down or stack a block, my hand becomes empty.
+   Once you stack a block on top of a second block, the second block is no longer clear.
+
+#domain_intro: |
+#  ### **Block Stacking Environment**
+#
+#  You are managing a set of blocks that can be arranged into stacks on a table. Below are the available actions and the rules governing them.
+#
+#  ---
+#
+#  #### **Available Actions**
+#
+#  1. **Pick Up a Block**
+#     - **Description:** Grasp a single block from the table.
+#     - **Conditions:**
+#       - Your hand is empty.
+#       - The block is **on the table**.
+#       - The block is **clear** (no blocks are stacked on top of it).
+#
+#  2. **Unstack a Block**
+#     - **Description:** Remove the top block from an existing stack.
+#     - **Conditions:**
+#       - Your hand is empty.
+#       - The block to be unstacked is **clear**.
+#       - The block is indeed the **topmost** block on its current stack.
+#
+#  3. **Put Down a Block**
+#     - **Description:** Place the block you are holding onto the table.
+#     - **Conditions:**
+#       - You are **holding** a block.
+#     - **Post-Action Effect:**
+#       - Your hand becomes empty.
+#
+#  4. **Stack a Block**
+#     - **Description:** Place the block you are holding on top of another **clear** block.
+#     - **Conditions:**
+#       - You are **holding** a block.
+#       - The target block you are stacking onto is **clear**.
+#     - **Post-Action Effects:**
+#       - Your hand becomes empty.
+#       - The target block is now **not clear** (since another block is stacked on it).
+#
+#  ---
+#
+#  #### **Rules and Restrictions**
+#
+#  - **Single Block Manipulation:** You can only pick up or unstack **one block at a time**.
+#
+#  - **Hand Capacity:** Your hand can hold **only one block** at any given moment.
+#
+#  - **Clear Block Definition:**
+#    - A block is **clear** if:
+#      - **No other blocks** are stacked on top of it.
+#      - It is **not being held** by your hand.
+#
+#  - **Action Preconditions:**
+#    - **Pick Up:**
+#      - The block must be **on the table** and **clear**.
+#    - **Unstack:**
+#      - The block must be the **top block** of its stack and **clear**.
+#
+#  - **Post-Action Hand State:**
+#    - After performing a **put down** or **stack** action, your hand becomes **empty**.
+#
+#  - **Stacking Effect:**
+#    - Once you **stack** a block onto another, the **base block** is **no longer clear**.
+#
+#  ---
+#
+#  ### **Summary of Workflow**
+#
+#  1. **Starting Condition:** All blocks are either on the table or stacked. Ensure your hand is empty before initiating any action.
+#
+#  2. **Picking Up:**
+#     - Identify a **clear** block on the table.
+#     - **Pick up** the block if your hand is empty.
+#
+#  3. **Unstacking:**
+#     - Identify a **clear** top block from a stack.
+#     - **Unstack** the block if your hand is empty.
+#
+#  4. **Placing a Block:**
+#     - **Put down** the held block onto the table, making your hand empty.
+#     - Or **stack** the held block onto another **clear** block, making your hand empty and updating the status of the base block.
+#
+#  ---
+
+#domain_intro: |
+#  I am playing with a set of blocks where I need to arrange the blocks into stacks. Here are the actions I can do
+#
+#  Pick up a block
+#  Unstack a block from on top of another block
+#  Put down a block
+#  Stack a block on top of another block
+#
+#  I have the following restrictions on my actions:
+#  I can only pick up or unstack one block at a time.
+#  I can only pick up or unstack a block if my hand is empty.
+#  I can only pick up a block if the block is on the table and the block is clear. A block is clear if the block has no other blocks on top of it and if the block is not picked up.
+#  I can only unstack a block from on top of another block if the block I am unstacking was really on top of the other block.
+#  I can only unstack a block from on top of another block if the block I am unstacking is clear.
+#  Once I pick up or unstack a block, I am holding the block.
+#  I can only put down a block that I am holding.
+#  I can only stack a block on top of another block if I am holding the block being stacked.
+#  I can only stack a block on top of another block if the block onto which I am stacking the block is clear.
+#  Once I put down or stack a block, my hand becomes empty.
+#  Once you stack a block on top of a second block, the second block is no longer clear.
+#
+#  [STATEMENT]
+#  As initial conditions I have that, the blue block is clear, the orange block is clear, the hand is empty, the orange block is on top of the yellow block, the yellow block is on top of the red block, the red block is on the table and the blue block is on the table.
+#  My goal is to have that the red block is on top of the orange block, the blue block is on top of the red block and the yellow block is on top of the blue block.
+#
+#  My plan is as follows:
+#
+#  [PLAN]
+#  1.
+#     - Reasoning: To move the yellow block, the orange block must be removed first.
+#     - Action: Unstack the orange block from on top of the yellow block.
+#  2.
+#     - Reasoning: Placing the orange block on the table clears the way to handle the yellow block.
+#     - Action: Put down the orange block.
+#  3.
+#     - Reasoning: To move the red block, the yellow block must be removed first.
+#     - Action: Unstack the yellow block from on top of the red block.
+#  4.
+#     - Reasoning: Placing the yellow block on the table allows access to the red block.
+#     - Action: Put down the yellow block.
+#  5.
+#     - Reasoning: To place the red block on the orange block as per the goal.
+#     - Action: Pick up the red block.
+#  6.
+#     - Reasoning: This achieves part of the desired final arrangement.
+#     - Action: Stack the red block on top of the orange block.
+#  7.
+#     - Reasoning: To place it on top of the red block as per the goal.
+#     - Action: Pick up the blue block.
+#  8.
+#     - Reasoning: This sets up the final position for the yellow block.
+#     - Action: Stack the blue block on top of the red block.
+#  9.
+#     - Reasoning: To complete the goal by placing it on top of the blue block.
+#     - Action: Pick up the yellow block.
+#  10.
+#      - Reasoning: This completes the desired final arrangement.
+#      - Action: Stack the yellow block on top of the blue block.
+#
+#  [PLAN END]
+
+domain_intro_cost: |
+   I am playing with a set of blocks where I need to arrange the blocks into stacks. Here are the actions I can do:
+
+   Pick up a block. It takes 1 minute to pick up a block.
+   Unstack a block from on top of another block. It takes 1 minute to unstack a block from on top of another block.
+   Put down a block. It takes 1 minute to put down a block.
+   Stack a block on top of another block. It takes 1 minute to stack a block on top of another block.
+
+   I have the following restrictions on my actions:
+   I can only pick up or unstack one block at a time.
+   I can only pick up or unstack a block if my hand is empty.
+   I can only pick up a block if the block is on the table and the block is clear. A block is clear if the block has no other blocks on top of it and if the block is not picked up.
+   I can only unstack a block from on top of another block if the block I am unstacking was really on top of the other block.
+   I can only unstack a block from on top of another block if the block I am unstacking is clear.
+   Once I pick up or unstack a block, I am holding the block.
+   I can only put down a block that I am holding.
+   I can only stack a block on top of another block if I am holding the block being stacked.
+   I can only stack a block on top of another block if the block onto which I am stacking the block is clear.
+   Once I put down or stack a block, my hand becomes empty.
+   Once you stack a block on top of a second block, the second block is no longer clear.
+
+
+actions:
+  {pick-up: "pick up the {}",
+   put-down: "put down the {}",
+   stack: "stack the {} on top of the {}",
+   unstack: "unstack the {} from on top of the {}"}
+
+
+predicates:
+  {ontable: "the {} is on the table",
+   clear: "the {} is clear",
+   handempty: "the hand is empty",
+   holding: "the hand is currently holding {}",
+   "on": "the {} is on top of the {}"}
+
+predicate_mapping:
+   {
+   "ontable": "on the table",
+   "clear": "clear",
+   "handempty": "hand is empty",
+   "holding": "holding",
+   "on": "on top of"
+   }  
+
+
+# encoded_objects: dictionary of object names, have to be alphabetical
+encoded_objects:
+  {"a": "red block", "b": "blue block", "c": "orange block", "d": "yellow block",
+   "e": "white block", "f": "magenta block", "g": "black block", "h": "cyan block",
+   "i": "green block", "j": "violet block", "k": "silver block", "l": "gold block" }
+
+callbacks:
+   - t1_gen_goal_directed_instances

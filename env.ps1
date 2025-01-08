@@ -1,0 +1,5 @@
+$Env:VAL="D:\pathing\planbench\LLMs-Planning\planner_tools\VAL"
+$Env:OPENAI_API_BASE="https://api2.aigcbest.top/v1/"
+$Env:OPENAI_API_KEY="sk--------------------------"
+$Env:http_proxy="http://127.0.0.1:7890"
+$Env:https_proxy="http://127.0.0.1:7890"
